@@ -1,92 +1,76 @@
-const API = "https://ca-smart-staycation-muqd.onrender.com/api";
+onst API = "https://ca-smart-staycation-muqd.onrender.com/api";
+
+async function loadDashboard() {
+    document.getElementById("title").innerText = "Dashboard";
+    document.getElementById("output").innerHTML = `
+        <h2>Welcome to CA Smart Staycation</h2>
+        <p>Select a menu from the left.</p>
+    `;
+}
 
 async function loadGuests() {
     document.getElementById("title").innerText = "Guests";
-    const content = document.getElementById("content");
-    content.innerHTML = "Loading...";
 
-    try {
-        const res = await fetch(`${API}/guests`);
-        const json = await res.json();
+    const res = await fetch(`${API}/guests`);
+    const json = await res.json();
 
-        if (!json.data.length) {
-            content.innerHTML = "<p>No guests found.</p>";
-            return;
-        }
+    let html = "<h2>Guests</h2>";
 
-        content.innerHTML = json.data.map(g => `
-            <div class="card">
-                <h3>${g.firstName} ${g.lastName}</h3>
-                <p>Email: ${g.email || "-"}</p>
-                <p>Phone: ${g.phone}</p>
-            </div>
-        `).join("");
+    json.data.forEach(g => {
+        html += `
+        <div style="padding:10px;border-bottom:1px solid #ddd">
+            <b>${g.firstName} ${g.lastName}</b><br>
+            ${g.phone}<br>
+            ${g.email}
+        </div>
+        `;
+    });
 
-    } catch (err) {
-        content.innerHTML = err.message;
-    }
+    document.getElementById("output").innerHTML = html;
 }
 
 async function loadRooms() {
     document.getElementById("title").innerText = "Rooms";
-    const content = document.getElementById("content");
-    content.innerHTML = "Loading...";
 
-    try {
-        const res = await fetch(`${API}/rooms`);
-        const json = await res.json();
+    const res = await fetch(`${API}/rooms`);
+    const json = await res.json();
 
-        if (!json.data.length) {
-            content.innerHTML = "<p>No rooms found.</p>";
-            return;
-        }
+    let html = "<h2>Rooms</h2>";
 
-        content.innerHTML = json.data.map(r => `
-            <div class="card">
-                <h3>Room ${r.roomNumber}</h3>
-                <p>${r.roomName}</p>
-                <p>Category: ${r.category}</p>
-                <p>Capacity: ${r.capacity}</p>
-                <p>₱${r.price}</p>
-                <p>Status: ${r.status}</p>
-            </div>
-        `).join("");
+    json.data.forEach(r => {
+        html += `
+        <div style="padding:10px;border-bottom:1px solid #ddd">
+            <b>Room ${r.roomNumber}</b><br>
+            ${r.roomName}<br>
+            ₱${r.price}
+        </div>
+        `;
+    });
 
-    } catch (err) {
-        content.innerHTML = err.message;
-    }
+    document.getElementById("output").innerHTML = html;
 }
 
 async function loadBookings() {
     document.getElementById("title").innerText = "Bookings";
-    const content = document.getElementById("content");
-    content.innerHTML = "Loading...";
 
-    try {
-        const res = await fetch(`${API}/bookings`);
-        const json = await res.json();
+    const res = await fetch(`${API}/bookings`);
+    const json = await res.json();
 
-        if (!json.data.length) {
-            content.innerHTML = "<p>No bookings found.</p>";
-            return;
-        }
+    let html = "<h2>Bookings</h2>";
 
-        content.innerHTML = json.data.map(b => `
-            <div class="card">
-                <h3>${b.bookingReference}</h3>
-                <p>Guest ID: ${b.guest}</p>
-                <p>Room ID: ${b.room}</p>
-                <p>Check-in: ${new Date(b.checkIn).toLocaleDateString()}</p>
-                <p>Check-out: ${new Date(b.checkOut).toLocaleDateString()}</p>
-                <p>Total: ₱${b.totalAmount}</p>
-                <p>Status: ${b.bookingStatus}</p>
-            </div>
-        `).join("");
+    json.data.forEach(b => {
+        html += `
+        <div style="padding:10px;border-bottom:1px solid #ddd">
+            <b>${b.bookingReference}</b><br>
+            ${new Date(b.checkIn).toLocaleDateString()} →
+            ${new Date(b.checkOut).toLocaleDateString()}<br>
+            ₱${b.totalAmount}
+        </div>
+        `;
+    });
 
-    } catch (err) {
-        content.innerHTML = err.message;
-    }
+    document.getElementById("output").innerHTML = html;
 }
 
-// Load guests by default when the page opens
-loadGuests();
+loadDashboard();
+
