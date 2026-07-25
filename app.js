@@ -2,41 +2,10 @@ const API = "https://ca-smart-staycation-muqd.onrender.com/api";
 
 async function loadDashboard() {
     document.getElementById("title").innerText = "Dashboard";
-document.getElementById("output").innerHTML = `
-<h2>New Booking</h2>
-
-<form id="bookingForm">
-
-<label>Guest</label><br>
-<select id="guest">
-${guestOptions}
-</select>
-<br><br>
-
-<label>Room</label><br>
-<select id="room" onchange="calculateTotal()">
-${roomOptions}
-</select>
-<br><br>
-
-<label>Check In</label><br>
-<input type="date" id="checkIn" onchange="calculateTotal()">
-<br><br>
-
-<label>Check Out</label><br>
-<input type="date" id="checkOut" onchange="calculateTotal()">
-<br><br>
-
-<p>
-<b>Total Amount:</b>
-<span id="totalAmount">₱0</span>
-</p>
-
-<button type="submit">Save Booking</button>
-
-</form>
-`;
-
+    document.getElementById("output").innerHTML = `
+        <h2>Welcome to CA Smart Staycation</h2>
+        <p>Select a menu from the left.</p>
+    `;
 }
 
 async function loadGuests() {
@@ -73,13 +42,15 @@ async function loadRooms() {
         <div style="padding:10px;border-bottom:1px solid #ddd">
             <b>Room ${r.roomNumber}</b><br>
             ${r.roomName}<br>
-            ₱${r.price}
+            ₱${r.price.toLocaleString()}
         </div>
         `;
     });
 
     document.getElementById("output").innerHTML = html;
 }
+
+loadDashboard();
 
 async function loadBookings() {
     document.getElementById("title").innerText = "Bookings";
@@ -123,7 +94,7 @@ async function loadBookings() {
             ${b.children}<br>
 
             <b>Total:</b>
-            ₱${b.totalAmount}<br>
+            ₱${b.totalAmount.toLocaleString()}<br>
 
             <b>Payment:</b>
             ${b.paymentStatus}<br>
@@ -138,10 +109,6 @@ async function loadBookings() {
     document.getElementById("output").innerHTML = html;
 }
 
-
-loadDashboard();
-
-
 async function showBookingForm() {
     document.getElementById("title").innerText = "New Booking";
 
@@ -153,39 +120,58 @@ async function showBookingForm() {
 
     let guestOptions = "";
     guests.forEach(g => {
-        guestOptions += `<option value="${g._id}">${g.firstName} ${g.lastName}</option>`;
+        guestOptions += `
+            <option value="${g._id}">
+                ${g.firstName} ${g.lastName}
+            </option>
+        `;
     });
 
     let roomOptions = "";
     rooms.forEach(r => {
-        roomOptions += `<option value="${r._id}">${r.roomNumber} - ${r.roomName}</option>`;
+        roomOptions += `
+            <option value="${r._id}">
+                ${r.roomNumber} - ${r.roomName}
+            </option>
+        `;
     });
 
     document.getElementById("output").innerHTML = `
         <h2>New Booking</h2>
 
         <form id="bookingForm">
+
             <label>Guest</label><br>
-            <select id="guest">${guestOptions}</select><br><br>
+            <select id="guest">
+                ${guestOptions}
+            </select><br><br>
 
             <label>Room</label><br>
-            <select id="room" onchange="calculateTotal()">${roomOptions}</select>
+            <select id="room" onchange="calculateTotal()">
+                ${roomOptions}
+            </select><br><br>
 
-<label>Check In</label><br>
-<input type="date" id="checkIn" onchange="calculateTotal()"><br><br>
+            <label>Check In</label><br>
+            <input type="date"
+                   id="checkIn"
+                   onchange="calculateTotal()"><br><br>
 
-<label>Check Out</label><br>
-<input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
+            <label>Check Out</label><br>
+            <input type="date"
+                   id="checkOut"
+                   onchange="calculateTotal()"><br><br>
 
-<p>
-    <b>Total Amount:</b>
-    <span id="totalAmount">₱0</span>
-</p>
+            <p>
+                <b>Total Amount:</b>
+                <span id="totalAmount">₱0</span>
+            </p>
 
-<button type="submit">Save Booking</button>
-</form>
+            <button type="submit">
+                Save Booking
+            </button>
 
-
+        </form>
+    `;
 
     document.getElementById("bookingForm").onsubmit = saveBooking;
 }
@@ -202,11 +188,11 @@ async function saveBooking(e) {
         adults: 1,
         children: 0,
         totalAmount: Number(
-    document.getElementById("totalAmount")
-        .innerText
-        .replace("₱", "")
-        .replace(/,/g, "")
-),
+            document.getElementById("totalAmount")
+                .innerText
+                .replace("₱", "")
+                .replace(/,/g, "")
+        ),
         paymentStatus: "Pending",
         bookingStatus: "Reserved",
         notes: ""
@@ -248,16 +234,6 @@ async function calculateTotal() {
 
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-const nights = Math.max(
-    1,
-    Math.ceil((end - start) / (1000 * 60 * 60 * 24))
-);
-
-const total = room.price * nights;
-
-document.getElementById("totalAmount").innerText =
-    `₱${total.toLocaleString()}`;
-
 
     const nights = Math.max(
         1,
@@ -269,3 +245,4 @@ document.getElementById("totalAmount").innerText =
     document.getElementById("totalAmount").innerText =
         `₱${total.toLocaleString()}`;
 }
+
