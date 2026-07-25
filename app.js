@@ -248,6 +248,16 @@ async function calculateTotal() {
 
     const start = new Date(checkIn);
     const end = new Date(checkOut);
+const nights = Math.max(
+    1,
+    Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+);
+
+const total = room.price * nights;
+
+document.getElementById("totalAmount").innerText =
+    `₱${total.toLocaleString()}`;
+
 
     const nights = Math.max(
         1,
