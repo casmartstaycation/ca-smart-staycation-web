@@ -53,50 +53,60 @@ async function loadRooms() {
 async function loadBookings() {
     document.getElementById("title").innerText = "Bookings";
 
-    const res = await fetch(`${API}/bookings`);
-    const json = await res.json();
+    const bookingRes = await fetch(`${API}/bookings`);
+    const guestRes = await fetch(`${API}/guests`);
+    const roomRes = await fetch(`${API}/rooms`);
+
+    const bookings = (await bookingRes.json()).data;
+    const guests = (await guestRes.json()).data;
+    const rooms = (await roomRes.json()).data;
 
     let html = "<h2>Bookings</h2>";
 
-    json.data.forEach(b => {
-html += `
-<div style="padding:12px;border-bottom:1px solid #ddd">
+    bookings.forEach(b => {
 
-<b>${b.bookingReference}</b><br>
+        const guest = guests.find(g => g._id === b.guest);
+        const room = rooms.find(r => r._id === b.room);
 
-Guest:
-${b.guest}<br>
+        html += `
+        <div style="padding:12px;border-bottom:1px solid #ddd">
 
-Room:
-${b.room}<br>
+            <b>${b.bookingReference}</b><br><br>
 
-Check In:
-${new Date(b.checkIn).toLocaleDateString()}<br>
+            <b>Guest:</b>
+            ${guest ? guest.firstName + " " + guest.lastName : "Unknown"}<br>
 
-Check Out:
-${new Date(b.checkOut).toLocaleDateString()}<br>
+            <b>Room:</b>
+            ${room ? room.roomNumber + " - " + room.roomName : "Unknown"}<br>
 
-Adults:
-${b.adults}<br>
+            <b>Check In:</b>
+            ${new Date(b.checkIn).toLocaleDateString()}<br>
 
-Children:
-${b.children}<br>
+            <b>Check Out:</b>
+            ${new Date(b.checkOut).toLocaleDateString()}<br>
 
-Total:
-₱${b.totalAmount}<br>
+            <b>Adults:</b>
+            ${b.adults}<br>
 
-Payment:
-${b.paymentStatus}<br>
+            <b>Children:</b>
+            ${b.children}<br>
 
-Status:
-${b.bookingStatus}
+            <b>Total:</b>
+            ₱${b.totalAmount}<br>
 
-</div>
-`;
+            <b>Payment:</b>
+            ${b.paymentStatus}<br>
+
+            <b>Status:</b>
+            ${b.bookingStatus}
+
+        </div>
+        `;
     });
 
     document.getElementById("output").innerHTML = html;
 }
+
 
 loadDashboard();
 
