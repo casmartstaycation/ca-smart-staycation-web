@@ -120,6 +120,35 @@ async function showBookingForm() {
 async function saveBooking(e) {
     e.preventDefault();
 
-    alert("Save Booking is working!");
-}
+    const booking = {
+        bookingReference: "BK" + Date.now(),
+        guest: document.getElementById("guest").value,
+        room: document.getElementById("room").value,
+        checkIn: document.getElementById("checkIn").value,
+        checkOut: document.getElementById("checkOut").value,
+        adults: 1,
+        children: 0,
+        totalAmount: 2500,
+        paymentStatus: "Pending",
+        bookingStatus: "Reserved",
+        notes: ""
+    };
 
+    const res = await fetch(`${API}/bookings`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(booking)
+    });
+
+    const json = await res.json();
+
+    if (json.status === "success") {
+        alert("Booking saved!");
+        loadBookings();
+    } else {
+        alert("Failed to save booking.");
+        console.log(json);
+    }
+}
