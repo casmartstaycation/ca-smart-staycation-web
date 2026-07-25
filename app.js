@@ -138,15 +138,24 @@ async function showBookingForm() {
             <select id="guest">${guestOptions}</select><br><br>
 
             <label>Room</label><br>
-            <select id="room">${roomOptions}</select><br><br>
+            <select id="room" onchange="calculateTotal()">${roomOptions}</select>
 
             <label>Check In</label><br>
-            <input type="date" id="checkIn"><br><br>
+            <input type="date" id="checkIn" onchange="calculateTotal()">
+            <input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
 
-            <label>Check Out</label><br>
-            <input type="date" id="checkOut"><br><br>
+<button type="submit">Save Booking</button><input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
 
-            <button type="submit">Save Booking</button>
+<button type="submit">Save Booking</button>
+<label>Check Out</label><br>
+<input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
+
+<p>
+    <b>Total Amount:</b>
+    <span id="totalAmount">₱0</span>
+</p>
+
+<button type="submit">Save Booking</button>
         </form>
     `;
 
@@ -164,7 +173,12 @@ async function saveBooking(e) {
         checkOut: document.getElementById("checkOut").value,
         adults: 1,
         children: 0,
-        totalAmount: 2500,
+        totalAmount: Number(
+    document.getElementById("totalAmount")
+        .innerText
+        .replace("₱", "")
+        .replace(/,/g, "")
+),
         paymentStatus: "Pending",
         bookingStatus: "Reserved",
         notes: ""
@@ -187,4 +201,33 @@ async function saveBooking(e) {
         alert("Failed to save booking.");
         console.log(json);
     }
+}
+
+async function calculateTotal() {
+
+    const roomId = document.getElementById("room").value;
+    const checkIn = document.getElementById("checkIn").value;
+    const checkOut = document.getElementById("checkOut").value;
+
+    if (!roomId || !checkIn || !checkOut) return;
+
+    const res = await fetch(`${API}/rooms`);
+    const rooms = (await res.json()).data;
+
+    const room = rooms.find(r => r._id === roomId);
+
+    if (!room) return;
+
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+
+    const nights = Math.max(
+        1,
+        Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+    );
+
+    const total = room.price * nights;
+
+    document.getElementById("totalAmount").innerText =
+        `₱${total.toLocaleString()}`;
 }
