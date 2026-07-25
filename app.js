@@ -117,3 +117,9 @@ async function showBookingForm() {
     document.getElementById("bookingForm").onsubmit = saveBooking;
 }
 
+async function saveBooking(e) {
+    e.preventDefault();
+
+    alert("Save Booking is working!");
+}
+
