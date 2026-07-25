@@ -218,6 +218,11 @@ async function saveBooking(e) {
 }
 
 async function calculateTotal() {
+async function calculateTotal() {
+
+    console.log("calculateTotal called");
+
+    const roomId = document.getElementById("room").value;
 
     const roomId = document.getElementById("room").value;
     const checkIn = document.getElementById("checkIn").value;
