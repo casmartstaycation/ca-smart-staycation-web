@@ -140,13 +140,9 @@ async function showBookingForm() {
             <label>Room</label><br>
             <select id="room" onchange="calculateTotal()">${roomOptions}</select>
 
-            <label>Check In</label><br>
-            <input type="date" id="checkIn" onchange="calculateTotal()">
-            <input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
+<label>Check In</label><br>
+<input type="date" id="checkIn" onchange="calculateTotal()"><br><br>
 
-<button type="submit">Save Booking</button><input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
-
-<button type="submit">Save Booking</button>
 <label>Check Out</label><br>
 <input type="date" id="checkOut" onchange="calculateTotal()"><br><br>
 
@@ -156,8 +152,9 @@ async function showBookingForm() {
 </p>
 
 <button type="submit">Save Booking</button>
-        </form>
-    `;
+</form>
+
+
 
     document.getElementById("bookingForm").onsubmit = saveBooking;
 }
