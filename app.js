@@ -59,14 +59,40 @@ async function loadBookings() {
     let html = "<h2>Bookings</h2>";
 
     json.data.forEach(b => {
-        html += `
-        <div style="padding:10px;border-bottom:1px solid #ddd">
-            <b>${b.bookingReference}</b><br>
-            ${new Date(b.checkIn).toLocaleDateString()} →
-            ${new Date(b.checkOut).toLocaleDateString()}<br>
-            ₱${b.totalAmount}
-        </div>
-        `;
+html += `
+<div style="padding:12px;border-bottom:1px solid #ddd">
+
+<b>${b.bookingReference}</b><br>
+
+Guest:
+${b.guest}<br>
+
+Room:
+${b.room}<br>
+
+Check In:
+${new Date(b.checkIn).toLocaleDateString()}<br>
+
+Check Out:
+${new Date(b.checkOut).toLocaleDateString()}<br>
+
+Adults:
+${b.adults}<br>
+
+Children:
+${b.children}<br>
+
+Total:
+₱${b.totalAmount}<br>
+
+Payment:
+${b.paymentStatus}<br>
+
+Status:
+${b.bookingStatus}
+
+</div>
+`;
     });
 
     document.getElementById("output").innerHTML = html;
