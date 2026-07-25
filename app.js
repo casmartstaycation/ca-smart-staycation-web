@@ -1,4 +1,4 @@
-onst API = "https://ca-smart-staycation-muqd.onrender.com/api";
+const API = "https://ca-smart-staycation-muqd.onrender.com/api";
 
 async function loadDashboard() {
     document.getElementById("title").innerText = "Dashboard";
