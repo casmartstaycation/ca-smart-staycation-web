@@ -2,10 +2,41 @@ const API = "https://ca-smart-staycation-muqd.onrender.com/api";
 
 async function loadDashboard() {
     document.getElementById("title").innerText = "Dashboard";
-    document.getElementById("output").innerHTML = `
-        <h2>Welcome to CA Smart Staycation</h2>
-        <p>Select a menu from the left.</p>
-    `;
+document.getElementById("output").innerHTML = `
+<h2>New Booking</h2>
+
+<form id="bookingForm">
+
+<label>Guest</label><br>
+<select id="guest">
+${guestOptions}
+</select>
+<br><br>
+
+<label>Room</label><br>
+<select id="room" onchange="calculateTotal()">
+${roomOptions}
+</select>
+<br><br>
+
+<label>Check In</label><br>
+<input type="date" id="checkIn" onchange="calculateTotal()">
+<br><br>
+
+<label>Check Out</label><br>
+<input type="date" id="checkOut" onchange="calculateTotal()">
+<br><br>
+
+<p>
+<b>Total Amount:</b>
+<span id="totalAmount">₱0</span>
+</p>
+
+<button type="submit">Save Booking</button>
+
+</form>
+`;
+
 }
 
 async function loadGuests() {
