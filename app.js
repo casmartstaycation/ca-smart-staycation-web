@@ -74,3 +74,61 @@ async function loadBookings() {
 
 loadDashboard();
 
+async function showBookingForm() {
+    document.getElementById("title").innerText = "New Booking";
+
+    try {
+        const guestsRes = await fetch(`${API}/guests`);
+        const roomsRes = await fetch(`${API}/rooms`);
+
+        const guests = await guestsRes.json();
+        const rooms = await roomsRes.json();
+
+        let guestOptions = "";
+        guests.data.forEach(g => {
+            guestOptions += `<option value="${g._id}">${g.firstName} ${g.lastName}</option>`;
+        });
+
+        let roomOptions = "";
+        rooms.data.forEach(r => {
+            roomOptions += `<option value="${r._id}">Room ${r.roomNumber} - ${r.roomName}</option>`;
+        });
+
+        document.getElementById("output").innerHTML = `
+            <h2>Create Booking</h2>
+
+            <label>Guest</label><br>
+            <select id="guest">
+                ${guestOptions}
+            </select>
+
+            <br><br>
+
+            <label>Room</label><br>
+            <select id="room">
+                ${roomOptions}
+            </select>
+
+            <br><br>
+
+            <label>Check In</label><br>
+            <input type="date" id="checkIn">
+
+            <br><br>
+
+            <label>Check Out</label><br>
+            <input type="date" id="checkOut">
+
+            <br><br>
+
+            <button onclick="alert('Save Booking will be added next!')">
+                Save Booking
+            </button>
+        `;
+
+    } catch (err) {
+        document.getElementById("output").innerHTML =
+            `<p style="color:red;">${err}</p>`;
+    }
+}
+
